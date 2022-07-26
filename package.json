@@ -14,5 +14,10 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.1.0"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.15.0",
+    "npm-watch": "^0.11.0",
+    "react": "^18.2.0"
   }
 }

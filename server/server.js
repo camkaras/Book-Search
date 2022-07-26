@@ -3,8 +3,24 @@ const path = require('path');
 const db = require('./config/connection');
 const routes = require('./routes');
 
-const app = express();
+const { typeDefs, resolvers } = require("./schemas");
+const { authMiddleware } = require("./utils/auth");
 const PORT = process.env.PORT || 3001;
+
+const app = express();
+
+async function startApolloServer(typeDefs, resolvers) {
+	const server = new ApolloServer({ typeDefs, resolvers, context: authMiddleware });
+	await server.start();
+	server.applyMiddleware({ app });
+
+	db.once("open", () => {
+		app.listen(PORT, () => {
+			console.log(`Server is listening on port ${PORT}`);
+		});
+	});
+}
+startApolloServer(typeDefs, resolvers);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
